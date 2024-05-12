@@ -12,46 +12,40 @@ module FPraser
       @@body = @@body.body
     end
 
-    def find_all(element)
+    def find_all(tag)
+
       res = []
-      founded_times = 0
       index = 0
-      len = @@body.scan(element).length / 2
-      while index <= @@body.length
-        if @@body[index] == element[0] && @@body[index-1] == "<"
-          match = match_element(element,@@body,index)
-          if match[:is_matched]
-            sentence = get_sentence(@@body, index, element)
-            res << sentence[:sentence]
-            index = sentence[:start_index]
-            puts "yesss sir"
-          end
+      tag_start = "<#{tag}"
+      tag_end = "</#{tag}>"
+      tag_start_index = @@body.index(tag_start, index)
+      len = @@body.scan(tag_end).length
+      founded_times = 0
 
-        end
-        index += 1
+      while founded_times < len
+        res << get_sentence(@@body, tag_start_index)
+        tag_start_index = @@body.index(tag_start, index)
+        founded_times += 1
+
       end
-      puts res
-      puts "end"
-
+      res
     end
 
-    def get_sentence(body, start_index, element)
+    def get_sentence(body, start_index)
       while body[start_index] != ">"
         start_index+=1
       end
+      start_index+=1
       res = []
       while (body[start_index] != '<') && (body[start_index + 1] != '/')
         res << body[start_index]
         start_index += 1
       end
-      { sentence: res.join(''), start_index: start_index + 3 + element.length }
-    end
-    
+      res.join("")
+    end    
 
     def match_element(element, body, index)
-      test = []
       (0..element.length-1).each do |i|
-        test.push(element[i])
         if body[index] != element[i]
           return { is_matched: false, index: index - 1 }
         end

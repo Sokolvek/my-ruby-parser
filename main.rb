@@ -5,7 +5,7 @@ require 'open-uri'
 require_relative 'parser'
 
 parser = FPraser::Parser.new("https://example.com")
-parser.find_all("p")
+puts parser.find_all("p")
 
 url = URI('https://sokolvek.github.io/portfolio/#/')
 
@@ -13,4 +13,4 @@ url = URI('https://sokolvek.github.io/portfolio/#/')
 res = Net::HTTP.get_response(url)
 
 test = "h21"
-a = parser.match_element("p", test, 0)
+a = parser.match_element("h1", test, 0)
